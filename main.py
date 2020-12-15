@@ -1,5 +1,6 @@
 from rich.console import Console
 from rich.table import Table
+import click
 
 # todo: give random number quote
 # `--no bin,hex` to exclude
@@ -30,28 +31,28 @@ from rich.table import Table
 from bases import bases
 
 
-def main():
-    given = 'AA'
-    base_key = 'hex'  # --hex, -0x or --base=15
-
-    if base_key is None:
+@click.command()
+@click.option('--base', default='dec', help='base of the given value')
+@click.argument('value')
+def parse_command(base, value):
+    if base is None:
         for _, base in bases.items():
             if not base.can_be_inferred():
                 continue
 
-            inferred = base.is_inferred(given)
-            valid = base.is_valid(given)
+            inferred = base.is_inferred(value)
+            valid = base.is_valid(value)
 
             if inferred:
                 if valid:
-                    base_key = base.key()
+                    base = base.key()
                     break
                 else:
                     print(f"Looks like a `{base.key()}`, but does not seem to be valid")
                     break
 
     # todo: try and parse that value
-    value = bases[base_key].parse(given)
+    value = bases[base].parse(value)
     value.is_given = True
 
     # todo: do all conversions from `Base` that was parsed
@@ -90,8 +91,9 @@ def main():
     # Print any others
     for value in independent_displays:
         console.print(value.title())
-        console.print(value.display(console))
+        value.display(console)
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main()
+    parse_command()
