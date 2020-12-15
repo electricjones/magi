@@ -136,7 +136,7 @@ class BinaryIndexed(Binary):
 
     def display(self, console=None):
         stripped = super().display()
-        starting_index = (len(stripped) ** 2) * 2
+        starting_index = int((2 ** len(stripped)) / 2)
 
         table = Table()
 
