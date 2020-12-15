@@ -37,20 +37,27 @@ import magi.numbers as nbrs  # todo: better name
 @click.argument('value')
 def main(base, value):
     if base is None:
-        for _, base in nbrs.bases.items():  # todo: rename this item and better export
-            if not base.can_be_inferred():
+        for _, base_item in nbrs.bases.items():  # todo: rename this item and better export
+            if not base_item.can_be_inferred():
                 continue
 
-            inferred = base.is_inferred(value)
-            valid = base.is_valid(value)
+            inferred = base_item.is_inferred(value)
+            valid = base_item.is_valid(value)
 
             if inferred:
                 if valid:
-                    base = base.key()
+                    base = base_item.key()
                     break
                 else:
-                    print(f"Looks like a `{base.key()}`, but does not seem to be valid")
+                    print(f"Looks like a `{base_item.key()}`, but does not seem to be valid")
                     break
+
+    # If we can't infer the base, and we weren't given anything, lets' try decimal
+    if base is None:
+        if not nbrs.Decimal.is_valid(value):
+            print("We tried decimal, but that doesn't seem valid")
+
+        base = nbrs.Decimal.key()
 
     # todo: try and parse that value
     value = nbrs.bases[base].parse(value)
