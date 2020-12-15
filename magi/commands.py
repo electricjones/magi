@@ -1,6 +1,13 @@
+import click
 from rich.console import Console
 from rich.table import Table
-import click
+
+# `magi [OPTIONS] <number>
+# `magi 200`
+# `magi 0xEF` or `magi -hex EF`  (0b, 0o, 0x)
+# `magi --base=22 44` for giving a base 44 number
+import magi.numbers as nbrs  # todo: better name
+
 
 # todo: give random number quote
 # `--no bin,hex` to exclude
@@ -24,15 +31,9 @@ import click
 # todo: allow expressions `magi '200 + 3'` or magi '10001 << 5' or magi '0x4A | 0xB2'
 # todo: maybe allow 0[3]13 vor base 3
 
-# `magi [OPTIONS] <number>
-# `magi 200`
-# `magi 0xEF` or `magi -hex EF`  (0b, 0o, 0x)
-# `magi --base=22 44` for giving a base 44 number
-import magi.numbers as nbrs
-
 
 @click.command()
-@click.option('--base', default='dec', help='base of the given value')
+@click.option('--base', default=None, help='base of the given value')
 @click.argument('value')
 def main(base, value):
     if base is None:

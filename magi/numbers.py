@@ -206,7 +206,7 @@ class Decimal(AbstractBase):
         return 10
 
 
-class Hexadecimal(AbstractBase):
+class Hexadecimal(InferredBase):
     @classmethod
     def from_decimal(cls, number: int) -> str:
         return hex(number)
